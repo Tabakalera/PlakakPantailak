@@ -1,0 +1,6 @@
+.env
+salida_prueba/
+__pycache__/
+cache_datos.json
+servidor.log
+NOTAS.md

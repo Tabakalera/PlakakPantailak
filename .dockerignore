@@ -1,0 +1,8 @@
+.env
+.git
+__pycache__/
+salida_prueba/
+cache_datos.json
+servidor.log
+explorar.py
+NOTAS.md

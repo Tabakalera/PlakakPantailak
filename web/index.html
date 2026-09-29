@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="eu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tabakalera · Fotovoltaica</title>
+<link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+<div id="escenario">
+
+  <!-- Cabecera: identificación -->
+  <header class="cabecera">
+    <div class="marca">
+      <img class="logo" src="img/logo-tabakalera.svg" alt="Tabakalera">
+      <div class="subtitulo" data-t="subtitulo"></div>
+    </div>
+    <div class="estado">
+      <div id="reloj" class="reloj">--:--</div>
+      <div id="aviso" class="aviso"></div>
+    </div>
+  </header>
+
+  <!-- Tres KPI principales -->
+  <section class="kpis">
+    <div class="kpi">
+      <div class="kpi-valor"><span class="solar"><b id="k-pct">–</b><span class="kpi-unid">%</span></span></div>
+      <p class="kpi-texto" data-t="frase_solar"></p>
+    </div>
+    <div class="kpi">
+      <div class="kpi-valor"><span class="solar"><b id="k-prod">–</b><span class="kpi-unid">kWh</span></span></div>
+      <p class="kpi-texto" data-t="prod_anio"></p>
+    </div>
+    <div class="kpi">
+      <div class="kpi-valor"><span class="solar neutro"><b id="k-co2">–</b><span id="k-co2-unid" class="kpi-unid">t CO₂</span></span></div>
+      <p class="kpi-texto" data-t="co2_anio"></p>
+      <div class="equivalencias">
+        <svg class="icono-eq" viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M6,22 L24,7 L42,22"/><path d="M11,18 V41 H37 V18"/><path d="M20,41 V29 H28 V41"/>
+        </svg>
+        <span><b id="eq-hogares">–</b> <span data-t="hogares"></span></span>
+        <span class="punto-sep">·</span>
+        <svg class="icono-eq" viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M24,4 C14,4 8,12 10,20 C5,23 6,33 14,33 H34 C42,33 43,23 38,20 C40,12 34,4 24,4 Z"/><path d="M24,44 V20"/><path d="M24,30 L17,24"/><path d="M24,26 L30,21"/>
+        </svg>
+        <span><b id="eq-arboles">–</b> <span data-t="arboles"></span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Balance energético ahora: esquema simplificado -->
+  <section class="balance">
+    <div class="flujo">
+      <svg class="icono icono-grande" viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="46" cy="14" r="7" class="relleno"/>
+        <path d="M46,2 V4 M46,24 V26 M34,14 H36 M56,14 H58 M37.5,5.5 L39,7 M53,21 L54.5,22.5 M37.5,22.5 L39,21 M53,7 L54.5,5.5"/>
+        <path d="M8,30 H44 L52,54 H0 Z"/><path d="M18,30 L14,54 M30,30 L30,54 M40,30 L44,54 M4,42 H48"/>
+      </svg>
+      <div class="dato">
+        <span class="solar"><b id="v-fv">–</b></span>
+        <small data-t="solar"></small>
+      </div>
+      <svg class="flecha" id="f-fv" viewBox="0 0 110 14" aria-hidden="true"><line x1="2" y1="7" x2="100" y2="7"/><path d="M98,2 L108,7 L98,12 Z"/></svg>
+
+      <div class="edificio">
+        <div class="foto"><img src="img/tabakalera.jpg" alt=""></div>
+        <small data-t="edificio"></small>
+      </div>
+
+      <svg class="flecha" id="f-red" viewBox="0 0 110 14" aria-hidden="true"><line x1="108" y1="7" x2="10" y2="7"/><path d="M12,2 L2,7 L12,12 Z"/></svg>
+      <div class="dato">
+        <b id="v-red">–</b>
+        <small data-t="red"></small>
+      </div>
+      <svg class="icono icono-grande" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M32,2 L20,62 M32,2 L44,62"/><path d="M10,16 H54 M14,30 H50"/>
+        <path d="M27,16 L37,30 M37,16 L27,30 M25,30 L41,46 M39,30 L23,46 M22,46 L42,62 M42,46 L22,62"/>
+        <path d="M10,16 V20 M54,16 V20 M14,30 V34 M50,30 V34"/>
+      </svg>
+    </div>
+    <p class="linea-secundaria"><span data-t="consumo_edificio"></span> · <b id="v-total">–</b></p>
+    <p class="linea-terciaria"><span data-t="vertido"></span> · <b id="v-vertido">–</b></p>
+  </section>
+
+  <!-- Curva del día -->
+  <section class="grafica">
+    <div class="titulo-grafica" data-t="hoy"></div>
+    <ul class="leyenda">
+      <li><span class="muestra fv"></span><span data-t="leyenda_fv"></span></li>
+      <li><span class="muestra consumo"></span><span data-t="leyenda_consumo"></span></li>
+    </ul>
+    <svg id="curva" aria-label="Eguzki-ekoizpena eta eraikinaren kontsumoa gaur"></svg>
+    <div id="tooltip" class="tooltip" hidden></div>
+  </section>
+
+  <!-- Franja de detalle: hoy / mes / año (kWh) -->
+  <section class="franja">
+    <div class="periodo">
+      <small data-t="hoy"></small>
+      <p><span class="muestra fv"></span><b id="a-dia-p">–</b> <span data-t="produccion"></span>
+         <span class="muestra consumo"></span><b id="a-dia-c">–</b> <span data-t="consumo"></span></p>
+    </div>
+    <div class="periodo">
+      <small data-t="mes"></small>
+      <p><span class="muestra fv"></span><b id="a-mes-p">–</b> <span data-t="produccion"></span>
+         <span class="muestra consumo"></span><b id="a-mes-c">–</b> <span data-t="consumo"></span></p>
+    </div>
+    <div class="periodo">
+      <small data-t="anio"></small>
+      <p><span class="muestra fv"></span><b id="a-anio-p">–</b> <span data-t="produccion"></span>
+         <span class="muestra consumo"></span><b id="a-anio-c">–</b> <span data-t="consumo"></span></p>
+    </div>
+  </section>
+
+  <!-- Pie institucional -->
+  <footer class="logos">
+    <img src="img/logo-ue.webp" alt="Financiado por la Unión Europea · NextGenerationEU">
+    <img src="img/logo-miteco.webp" alt="Gobierno de España · Ministerio para la Transición Ecológica y el Reto Demográfico">
+    <img src="img/logo-idae.webp" alt="IDAE · Instituto para la Diversificación y Ahorro de la Energía">
+    <img src="img/logo-prtr.webp" alt="Plan de Recuperación, Transformación y Resiliencia">
+  </footer>
+
+</div>
+<script src="textos.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

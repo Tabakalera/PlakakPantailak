@@ -1,0 +1,15 @@
+services:
+  web:
+    image: tbksys/plakapantailak:release
+    restart: unless-stopped
+    env_file:
+      - .env
+    expose:
+      - 8000
+    networks:
+      - proxynet
+
+networks:
+  proxynet:
+    external: true
+    name: proxynet_network
