@@ -1,8 +1,8 @@
 "use strict";
 
-const REFRESCO_MS = 60_000;             // pedir datos cada minuto
-const RECARGA_MS = 6 * 60 * 60_000;     // recargar la página cada 6 h
-const DATOS_VIEJOS_MS = 15 * 60_000;    // aviso si los datos tienen más de 15 min
+const REFRESCO_MS = 60000;             // pedir datos cada minuto
+const RECARGA_MS = 6 * 60 * 60000;     // recargar la página cada 6 h
+const DATOS_VIEJOS_MS = 15 * 60000;    // aviso si los datos tienen más de 15 min
 const NS = "http://www.w3.org/2000/svg";
 
 const $ = (id) => document.getElementById(id);
@@ -69,10 +69,10 @@ function pasoBonito(max) {
 function pintarCurva(curva) {
   const svg = $("curva");
   svg.setAttribute("viewBox", `0 0 ${C.w} ${C.h}`);
-  svg.replaceChildren();
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
 
   const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
-  const t0 = hoy.getTime(), t1 = t0 + 24 * 3600_000;
+  const t0 = hoy.getTime(), t1 = t0 + 24 * 3600000;
   // timeUtc es el final de cada intervalo de 5 min
   const pts = curva.map((p) => ({ t: new Date(p.t).getTime(), fv: p.fv, consumo: p.consumo }))
                    .filter((p) => p.t > t0 && p.t <= t1);
@@ -90,15 +90,15 @@ function pintarCurva(curva) {
     tx.textContent = num(v);
   }
   for (let h = 0; h <= 24; h += 2) {
-    const tx = el("text", { x: x(t0 + h * 3600_000), y: C.h - 8, "text-anchor": "middle", class: "eje" }, svg);
-    tx.textContent = `${String(h).padStart(2, "0")}:00`;
+    const tx = el("text", { x: x(t0 + h * 3600000), y: C.h - 8, "text-anchor": "middle", class: "eje" }, svg);
+    tx.textContent = `${("0" + h).slice(-2)}:00`;
   }
 
   if (pts.length < 2) return;
 
   const serie = (clave) => {
     const linea = pts.map((p, i) => `${i ? "L" : "M"}${x(p.t).toFixed(1)},${y(p[clave] || 0).toFixed(1)}`).join("");
-    const area = `${linea}L${x(pts.at(-1).t).toFixed(1)},${y(0)}L${x(pts[0].t).toFixed(1)},${y(0)}Z`;
+    const area = `${linea}L${x(pts[pts.length - 1].t).toFixed(1)},${y(0)}L${x(pts[0].t).toFixed(1)},${y(0)}Z`;
     return { linea, area };
   };
   const c = serie("consumo"), f = serie("fv");

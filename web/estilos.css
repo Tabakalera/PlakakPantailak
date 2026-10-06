@@ -39,6 +39,9 @@ html, body {
 }
 b { font-weight: 700; color: var(--antracita); font-variant-numeric: tabular-nums; }
 
+/* Compatible con Chrome 56 (navegador Tizen de las pantallas Samsung):
+   sin grid ni gap en flex; los huecos se hacen con márgenes. */
+
 /* Lienzo fijo de 1920×1080 que app.js escala al tamaño de la pantalla */
 #escenario {
   position: absolute; top: 0; left: 0;
@@ -66,8 +69,8 @@ b { font-weight: 700; color: var(--antracita); font-variant-numeric: tabular-num
   display: flex; justify-content: space-between; align-items: center;
 }
 /* el título se alinea con la última línea de texto del logo */
-.marca { display: flex; align-items: flex-end; gap: 28px; }
-.logo { height: 64px; width: auto; }
+.marca { display: flex; align-items: flex-end; }
+.logo { height: 64px; width: auto; margin-right: 28px; }
 .subtitulo { font-size: 17px; font-weight: 500; letter-spacing: .06em; color: var(--gris-oscuro); line-height: 1; padding-bottom: 4px; }
 .estado { text-align: right; }
 .reloj { font-size: 28px; font-weight: 300; color: var(--antracita); font-variant-numeric: tabular-nums; }
@@ -77,23 +80,30 @@ b { font-weight: 700; color: var(--antracita); font-variant-numeric: tabular-num
 /* ---- KPI ---- */
 .kpis {
   position: absolute; left: 80px; right: 80px; top: 150px;
-  display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 80px;
+  display: flex;
 }
+.kpi, .periodo { flex: 1 1 0; }
+.kpi + .kpi, .periodo + .periodo { margin-left: 80px; }
+/* el tercer KPI se alinea a la derecha, con el reloj */
+.kpi:last-child { text-align: right; }
+.kpi:last-child .equivalencias { justify-content: flex-end; }
 .kpi-valor { line-height: 1; white-space: nowrap; }
 .kpi-valor b { font-size: 96px; letter-spacing: -.035em; }
 .kpi-unid { font-size: 40px; font-weight: 500; color: var(--antracita); margin-left: .25em; letter-spacing: -.01em; }
 .kpi-texto { margin-top: 18px; font-size: 22px; line-height: 1.3; color: var(--gris-oscuro); }
 .equivalencias {
-  margin-top: 16px; display: flex; align-items: center; gap: 10px;
+  margin-top: 16px; display: flex; align-items: center;
   font-size: 18px; color: var(--gris-medio);
 }
 .equivalencias b { font-weight: 600; color: var(--gris-oscuro); }
 .icono-eq { width: 24px; height: 24px; fill: none; stroke: var(--gris-medio); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
-.punto-sep { margin: 0 6px; }
+.equivalencias > * + * { margin-left: 10px; }
+.punto-sep { margin: 0 6px 0 16px; }
 
 /* ---- Balance energético ahora (centrado) ---- */
 .balance { position: absolute; left: 80px; right: 80px; top: 372px; text-align: center; }
-.flujo { display: flex; align-items: center; justify-content: center; gap: 22px; }
+.flujo { display: flex; align-items: center; justify-content: center; }
+.flujo > * + * { margin-left: 22px; }
 .icono { fill: none; stroke: var(--antracita); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
 .icono .relleno { fill: var(--antracita); }
 .icono-grande { width: 58px; height: 58px; flex: none; }
@@ -117,23 +127,26 @@ b { font-weight: 700; color: var(--antracita); font-variant-numeric: tabular-num
 /* ---- Franja de detalle bajo la gráfica: tres bloques alineados con los KPI ---- */
 .franja {
   position: absolute; left: 80px; right: 80px; top: 912px;
-  display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 80px;
+  display: flex;
   padding: 14px 0; border-top: 1px solid var(--linea); border-bottom: 1px solid var(--linea);
 }
 .periodo small { display: block; font-size: 14px; color: var(--gris-medio); margin-bottom: 4px; }
-.periodo p { display: flex; align-items: baseline; gap: 7px; font-size: 15px; color: var(--gris-medio); white-space: nowrap; }
+.periodo p { display: flex; align-items: baseline; font-size: 15px; color: var(--gris-medio); white-space: nowrap; }
 .periodo b { font-size: 24px; font-weight: 500; letter-spacing: -.01em; }
+.periodo p > * + * { margin-left: 7px; }
 .periodo .muestra { align-self: center; }
-.periodo .muestra.consumo { margin-left: 16px; }
+.periodo .muestra.consumo { margin-left: 23px; }
 
 /* ---- Gráfica ---- */
 .grafica { position: absolute; left: 80px; top: 612px; width: 1760px; height: 284px; }
 .titulo-grafica { position: absolute; left: 0; top: 0; font-size: 14px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--gris-medio); }
 .leyenda {
-  position: absolute; right: 0; top: -2px; display: flex; gap: 28px;
+  position: absolute; right: 0; top: -2px; display: flex;
   list-style: none; font-size: 14px; color: var(--gris-medio);
 }
-.leyenda li { display: flex; align-items: center; gap: 8px; }
+.leyenda li { display: flex; align-items: center; }
+.leyenda li + li { margin-left: 28px; }
+.leyenda li > * + * { margin-left: 8px; }
 .muestra { width: 14px; height: 10px; border-radius: 2px; flex: none; }
 .muestra.fv { background: var(--solar); }
 .muestra.consumo { background: var(--consumo-relleno); border-top: 2px solid var(--consumo-linea); }
@@ -154,6 +167,7 @@ b { font-weight: 700; color: var(--antracita); font-variant-numeric: tabular-num
 /* ---- Pie institucional ---- */
 .logos {
   position: absolute; left: 80px; right: 80px; top: 1014px; height: 46px;
-  display: flex; align-items: center; justify-content: center; gap: 120px;
+  display: flex; align-items: center; justify-content: center;
 }
 .logos img { height: 46px; width: auto; }
+.logos img + img { margin-left: 120px; }
