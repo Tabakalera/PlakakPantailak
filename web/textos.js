@@ -1,11 +1,11 @@
 "use strict";
 
 // Idiomas que rotan en la pantalla, en este orden. Para dejar solo euskera: ["eu"]
-const IDIOMAS = ["eu", "es", "en"];
-const CAMBIO_IDIOMA_SEG = 10; // segundos que se muestra cada idioma
+var IDIOMAS = ["eu", "es", "en"];
+var CAMBIO_IDIOMA_SEG = 10; // segundos que se muestra cada idioma
 
 // Textos de la pantalla: [euskera, castellano, inglés]
-const TEXTOS = {
+var TEXTOS = {
   subtitulo:        ["AUTOKONTSUMORAKO INSTALAZIO FOTOBOLTAIKOA", "INSTALACIÓN FOTOVOLTAICA DE AUTOCONSUMO", "SELF-CONSUMPTION SOLAR PV INSTALLATION"],
 
   // KPI
@@ -40,19 +40,19 @@ const TEXTOS = {
   esperando:        ["Datuen zain…", "Esperando datos…", "Waiting for data…"],
 };
 
-const POSICION = { eu: 0, es: 1, en: 2 };
+var POSICION = { eu: 0, es: 1, en: 2 };
 
 // ?idioma=eu|es|en en la URL fija un idioma y desactiva la rotación
-const IDIOMA_FIJO = new URLSearchParams(location.search).get("idioma");
+var IDIOMA_FIJO = (/[?&]idioma=([a-z]+)/.exec(location.search) || [])[1];
 
 // Idioma que toca ahora según el reloj (igual en todas las pantallas)
 function idiomaActual() {
   if (IDIOMA_FIJO in POSICION) return IDIOMA_FIJO;
-  const bloque = Math.floor(Date.now() / (CAMBIO_IDIOMA_SEG * 1000));
+  var bloque = Math.floor(Date.now() / (CAMBIO_IDIOMA_SEG * 1000));
   return IDIOMAS[bloque % IDIOMAS.length];
 }
 
-let idioma = idiomaActual();
+var idioma = idiomaActual();
 
 // Texto en el idioma actual
 function t(clave) {
@@ -61,23 +61,24 @@ function t(clave) {
 
 function pintarTextos() {
   document.documentElement.lang = idioma;
-  for (const el of document.querySelectorAll("[data-t]")) {
-    el.textContent = t(el.dataset.t);
+  var nodos = document.querySelectorAll("[data-t]");
+  for (var i = 0; i < nodos.length; i++) {
+    nodos[i].textContent = t(nodos[i].getAttribute("data-t"));
   }
 }
 
 // Comprueba cada pocos segundos si toca cambiar; al cambiar hace un fundido corto
 function vigilarIdioma(alCambiar) {
-  setInterval(() => {
-    const nuevo = idiomaActual();
+  setInterval(function () {
+    var nuevo = idiomaActual();
     if (nuevo === idioma) return;
-    const esc = document.getElementById("escenario");
-    esc.classList.add("cambiando-idioma");
-    setTimeout(() => {
+    var esc = document.getElementById("escenario");
+    esc.className = "cambiando-idioma";
+    setTimeout(function () {
       idioma = nuevo;
       pintarTextos();
       alCambiar();
-      esc.classList.remove("cambiando-idioma");
+      esc.className = "";
     }, 400);
   }, 250);
 }

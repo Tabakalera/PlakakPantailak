@@ -52,6 +52,8 @@ docker run --rm --env-file .env -p 8090:8000 tbksys/plakapantailak:release
 - El texto rota euskera → castellano → inglés cada 10 s.
 - `?idioma=eu`, `?idioma=es` o `?idioma=en` fija un idioma.
 - La página pide datos nuevos cada minuto y se recarga sola cada 6 h. No necesita interacción.
+- Funciona en las pantallas Samsung con MagicInfo, que llevan un navegador antiguo (Tizen 2.4, "Browser 1.1", WebKit de 2014). Por eso `web/` está escrito en JavaScript ES5 y CSS sin variables, flex ni grid. Hay que mantenerlo así.
+- `?diag` en la URL muestra abajo, en negro, el navegador, la resolución y cualquier error de JavaScript. Sirve para diagnosticar una pantalla sin conectar un ordenador.
 
 ## Notas
 

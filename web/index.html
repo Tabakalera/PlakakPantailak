@@ -63,7 +63,7 @@
       <svg class="flecha" id="f-fv" viewBox="0 0 110 14" aria-hidden="true"><line x1="2" y1="7" x2="100" y2="7"/><path d="M98,2 L108,7 L98,12 Z"/></svg>
 
       <div class="edificio">
-        <div class="foto"><img src="img/tabakalera.jpg" alt=""></div>
+        <div class="foto"></div>
         <small data-t="edificio"></small>
       </div>
 
@@ -90,7 +90,7 @@
       <li><span class="muestra consumo"></span><span data-t="leyenda_consumo"></span></li>
     </ul>
     <svg id="curva" aria-label="Eguzki-ekoizpena eta eraikinaren kontsumoa gaur"></svg>
-    <div id="tooltip" class="tooltip" hidden></div>
+    <div id="tooltip" class="tooltip"></div>
   </section>
 
   <!-- Franja de detalle: hoy / mes / año (kWh) -->
@@ -121,6 +121,19 @@
   </footer>
 
 </div>
+<div id="diag" style="display:none;position:absolute;left:0;right:0;bottom:0;padding:8px;background:#000;color:#fff;font:14px monospace;z-index:9"></div>
+<script>
+// ?diag en la URL: muestra el navegador y los errores de JavaScript en pantalla
+if (/[?&]diag/.test(location.search)) {
+  var diag = document.getElementById("diag");
+  diag.style.display = "block";
+  diag.appendChild(document.createTextNode(navigator.userAgent + " · " + window.innerWidth + "×" + window.innerHeight));
+  window.onerror = function (msg, url, linea) {
+    diag.appendChild(document.createElement("br"));
+    diag.appendChild(document.createTextNode("ERROR: " + msg + " (" + url + ":" + linea + ")"));
+  };
+}
+</script>
 <script src="textos.js"></script>
 <script src="app.js"></script>
 </body>
